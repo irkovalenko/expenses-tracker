@@ -9,19 +9,19 @@ class Expense extends Model
 {
     protected $fillable = ["name", "user_id", "amount", "category_id", "currency_id"];
 
-    /** @return BelongsTo<User, Expense> */
+    /** @return BelongsTo<User, $this> */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /** @return BelongsTo<Category, Expense> */
+    /** @return BelongsTo<Category, $this> */
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
 
-    /** @return BelongsTo<Currency, Expense> */
+    /** @return BelongsTo<Currency, $this> */
     public function currency(): BelongsTo
     {
         return $this->belongsTo(Currency::class);

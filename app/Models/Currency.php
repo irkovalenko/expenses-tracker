@@ -9,7 +9,7 @@ class Currency extends Model
 {
     protected $fillable = ["name", "symbol"];
 
-    /** @return HasMany<Expense, Currency> */
+    /** @return HasMany<Expense, $this> */
     public function expenses(): HasMany
     {
         return $this->hasMany(Expense::class);

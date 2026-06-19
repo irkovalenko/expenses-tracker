@@ -11,13 +11,13 @@ class Category extends Model
     protected $fillable = ["name"];
 
 
-    /** @return HasMany<Expense, Category> */
+    /** @return HasMany<Expense, $this> */
     public function expenses(): HasMany
     {
         return $this->hasMany(Expense::class);
     }
 
-    /** @return BelongsTo<User, Category> */
+    /** @return BelongsTo<User, $this> */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
