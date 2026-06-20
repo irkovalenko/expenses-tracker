@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -20,10 +21,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/dashboard', fn() => Inertia::render('Dashboard'))->name('dashboard');
-    Route::get('/expenses', fn() => Inertia::render('Expenses'))->name('expenses');
     Route::get('/categories', fn() => Inertia::render('Categories'))->name('categories');
     Route::get('/currencies', fn() => Inertia::render('Currencies'))->name('currencies');
     Route::get('/users', fn() => Inertia::render('Users'))->name('users');
+
+    Route::name('expenses.')->prefix('expenses')->group(function () {
+        Route::get('/', [ExpenseController::class, 'index'])->name('index');
+        Route::get('/create', [ExpenseController::class, 'create'])->name('create');
+        Route::post('/', [ExpenseController::class, 'store'])->name('store');
+        Route::get('//{expense}/show', [ExpenseController::class, 'show'])->name('show');
+        Route::get('//{expense}/edit', [ExpenseController::class, 'edit'])->name('edit');
+        Route::put('/{expense}', [ExpenseController::class, 'update'])->name('update');
+        Route::delete('/{expense}', [ExpenseController::class, 'destroy'])->name('delete');
+    });
 });
 
 require __DIR__ . '/auth.php';
