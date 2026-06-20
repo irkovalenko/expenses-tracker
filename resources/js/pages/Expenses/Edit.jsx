@@ -6,16 +6,16 @@ export default function Expenses() {
         <AuthenticatedLayout
             header={
                 <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    Dashboard of expenses
+                    Edit
                 </h2>
             }
         >
-            <Head title="Expenses" />
+            <Head title="Edit expense" />
 
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
-                            Expenses overview
+                            Edit expense
                         </div>
                     </div>
                 </div>
