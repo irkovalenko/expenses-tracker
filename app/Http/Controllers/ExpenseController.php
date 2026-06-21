@@ -17,9 +17,7 @@ class ExpenseController extends Controller
             ->latest()
             ->get();
 
-        return Inertia::render('Expenses/Index', [
-            'expenses' => $expenses,
-        ]);
+        return Inertia::render('Expenses/Index', compact('expenses'));
     }
 
 
@@ -54,25 +52,40 @@ class ExpenseController extends Controller
     public function show(Expense $expense)
     {
         return Inertia::render('Expenses/Show', [
-            'expense' => $expense->load(['currency', 'category'])
+            'expense' => $expense->load(['currency', 'category']),
         ]);
     }
 
 
     public function edit(Expense $expense)
     {
-        //
+        return Inertia::render('Expenses/Edit', [
+            'expense' => $expense->load(['currency', 'category']),
+            'categories' => Category::all(),
+            'currencies' => Currency::all(),
+        ]);
     }
 
 
     public function update(Request $request, Expense $expense)
     {
-        //
+        $validated = $request->validate(
+            [
+                'name' => 'required|string|max:255|min:3',
+                'amount' => 'required|numeric|min:0',
+                'category_id' => 'required|exists:categories,id',
+                'currency_id' => 'required|exists:currencies,id'
+            ]
+        );
+
+        $expense->update($validated);
+        return redirect()->route('expenses.index');
     }
 
 
     public function destroy(Expense $expense)
     {
-        //
+        $expense->delete();
+        return redirect()->route('expenses.index');
     }
 }

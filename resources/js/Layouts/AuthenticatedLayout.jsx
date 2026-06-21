@@ -32,13 +32,13 @@ export default function AuthenticatedLayout({ children }) {
                     </div>
                     
                     <div>
-                        <NavLink href={route('categories')} active={route().current('categories')}>
+                        <NavLink href={route('categories.index')} active={route().current('categories')}>
                         Categories
                     </NavLink>
                     </div>
                     
                     <div>
-                         <NavLink href={route('currencies')} active={route().current('currencies')}>
+                         <NavLink href={route('currencies.index')} active={route().current('currencies')}>
                         Currencies
                     </NavLink>
                     </div>
