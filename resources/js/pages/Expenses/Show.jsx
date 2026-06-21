@@ -1,7 +1,12 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router} from '@inertiajs/react';
 
 export default function Show({ expense }) {
+
+    const handleDelete = (id) => {
+        router.delete(route('expenses.delete', id));
+    }
+
     return (
         <AuthenticatedLayout>
             <Head title={expense.name} />
@@ -11,12 +16,22 @@ export default function Show({ expense }) {
                     <div className="p-6">
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-xl font-semibold text-gray-800">{expense.name}</h2>
+                        <div className="flex gap-3">
                             <Link
-                                href={route('expenses.index')}
+                                href={route('expenses.edit', expense.id)}
                                 className="text-indigo-500 hover:text-indigo-700 text-sm"
                             >
-                                ← Back to Expenses
+                                Edit
                             </Link>
+
+                             <button
+                                onClick={() => handleDelete(expense.id)}
+                                className="text-red-500 hover:text-red-700 text-sm"
+                            >
+                                Delete
+                            </button>
+                            </div>
+
                         </div>
 
                         <div className="space-y-4">
@@ -33,8 +48,19 @@ export default function Show({ expense }) {
                                 <p className="font-semibold">{new Date(expense.created_at).toLocaleDateString()}</p>
                             </div>
                         </div>
+
+                         <div className="mt-6">
+                            <Link
+                                href={route('expenses.index')}
+                                className="text-indigo-500 hover:text-indigo-700 text-sm"
+                            >
+                                ← Back to Expenses
+                            </Link>
+                        </div>
                     </div>
+
                 </div>
+
             </div>
         </AuthenticatedLayout>
     );

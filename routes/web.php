@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -33,6 +35,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('//{expense}/edit', [ExpenseController::class, 'edit'])->name('edit');
         Route::put('/{expense}', [ExpenseController::class, 'update'])->name('update');
         Route::delete('/{expense}', [ExpenseController::class, 'destroy'])->name('delete');
+    });
+
+
+    Route::name('categories.')->prefix('categories')->group(function () {
+        Route::get('/', [CategoryController::class, 'index'])->name('index');
+        Route::post('/', [CategoryController::class, 'store'])->name('store');
+        Route::put('/{category}', [CategoryController::class, 'update'])->name('update');
+        Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('delete');
+    });
+
+    Route::name('currencies.')->prefix('currencies')->group(function () {
+        Route::get('/', [CurrencyController::class, 'index'])->name('index');
+        Route::post('/', [CurrencyController::class, 'store'])->name('store');
+        Route::put('/{currency}', [CurrencyController::class, 'update'])->name('update');
+        Route::delete('/{currency}', [CurrencyController::class, 'destroy'])->name('delete');
     });
 });
 
