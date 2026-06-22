@@ -52,7 +52,7 @@ export default function Categories({ currencies }) {
                                                     onClick={() => startEditing(currency)}
                                                     className="cursor-pointer hover:text-indigo-500"
                                                 >
-                                                    {currency.name}
+                                                    {currency.name} ({currency.symbol})
                                                 </span>
                                             )}
                                         </td>
