@@ -42,7 +42,7 @@ class CategoryController extends Controller
         }
 
         $category->update($request->validate([
-            'name' => 'required|string|max:255|unique:categories.name',
+            'name' => 'required|string|max:255|unique:categories,name',
         ]));
 
         return redirect()->route('categories.index');

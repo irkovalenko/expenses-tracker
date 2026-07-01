@@ -1,5 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, router } from '@inertiajs/react';
 
 export default function Create( { categories, currencies }) {
     const { data, setData, post, processing, errors } = useForm({
@@ -8,6 +8,7 @@ export default function Create( { categories, currencies }) {
         currency_id: '',
         amount: '',
     });
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -74,7 +75,7 @@ export default function Create( { categories, currencies }) {
                                     className="border rounded w-full py-2 px-3"
                                 />
                             </div>
-
+                        <div className="flex gap-2">
                             <button
                                 type="submit"
                                 disabled={processing}
@@ -82,6 +83,16 @@ export default function Create( { categories, currencies }) {
                             >
                                 Create
                             </button>
+
+                             <button
+                                type="button"
+                                disabled={processing}
+                                onClick={() => router.visit(route('expenses.index'))}
+                                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                            >
+                                Cancel
+                            </button>
+                            </div>
                         </form>
                     </div>
                 </div>
