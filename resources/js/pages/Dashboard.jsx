@@ -1,6 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend, Line, LineChart } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, Cell, ResponsiveContainer, PieChart, Pie, Legend, Area, AreaChart, CartesianGrid } from 'recharts';
 import { useState } from 'react';
 
 const COLORS = ['#6366f1', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#3b82f6'];
@@ -50,6 +50,19 @@ export default function Dashboard({ expenses, currencies, defaultCurrency }) {
     }, [])
     .sort((a, b) => new Date(a.date) - new Date(b.date));
 
+    const CustomTooltip = ({ active, payload, label }) => {
+        if (active && payload && payload.length) {
+            return (
+                <div className="bg-slate-900 p-2 border rounded shadow">
+                    <p className="text-sm text-indigo-400">{label}</p>
+                    <p className="text-sm font-semibold text-indigo-400">{payload[0].value.toFixed(2)}</p>
+                </div>
+            );
+        }
+
+        return null;
+    };
+
     return (
         <AuthenticatedLayout
             header={
@@ -62,81 +75,89 @@ export default function Dashboard({ expenses, currencies, defaultCurrency }) {
 
             {/* Bar chart */}
             <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                    <div className="p-6 text-gray-900">
-                        <div className="flex items-center justify-between mb-4">
-                            <h3 className="font-semibold">
-                                Expenses by category ({selectedCurrency?.symbol ?? '€'})
-                            </h3>
-                            <select
-                                value={selectedCurrencyId ?? ''}
-                                onChange={(e) => setSelectedCurrencyId(parseInt(e.target.value))}
-                                className="border rounded px-3 py-1 text-sm"
-                            >
-                                {currencies.map(currency => (
-                                    <option key={currency.id} value={currency.id}>
-                                        {currency.symbol} — {currency.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        <ResponsiveContainer width="100%" height={300}>
-                            <BarChart data={barData}>
-                                <XAxis dataKey="category" />
-                                <YAxis />
-                                <Tooltip formatter={(value) => value.toFixed(2)}/>
-                                <Bar dataKey="amount" fill="#6366f1" />
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </div>
-                </div>
-            </div>
 
-          {/* Line chart */}
-            <div className="mx-auto max-w-7xl sm:px-6 lg:px-8 mt-6">
-                <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                    <div className="p-6 text-gray-900">
-                        <h3 className="font-semibold mb-4">
-                            Spending over time ({selectedCurrency?.symbol ?? '€'})
-                        </h3>
-                        <ResponsiveContainer width="100%" height={300}>
-                            <LineChart data={lineData}>
-                                <XAxis dataKey="date" />
-                                <YAxis />
-                                <Tooltip formatter={(value) => value.toFixed(2)} />
-                                <Line type="monotone" dataKey="amount" stroke="#6366f1" dot={false} />
-                            </LineChart>
-                        </ResponsiveContainer>
-                    </div>
-                </div>
-            </div>
+                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+    <div className="grid grid-cols-3 gap-6">
 
-            {/* Pie chart */}
-            <div className="mx-auto max-w-7xl sm:px-6 lg:px-8 mt-6">
-                <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                    <div className="p-6 text-gray-900">
-                        <h3 className="font-semibold mb-4">Expenses by currency</h3>
-                        <ResponsiveContainer width="100%" height={300}>
-                            <PieChart>
-                                <Pie
-                                    data={pieData}
-                                    dataKey="value"
-                                    nameKey="name"
-                                    cx="50%"
-                                    cy="50%"
-                                    outerRadius={100}
-                                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                                >
-                                    {pieData.map((entry, index) => (
-                                        <Cell key={index} fill={COLORS[index % COLORS.length]} />
-                                    ))}
-                                </Pie>
-                                <Tooltip formatter={(value) => value.toFixed(2)}/>
-                                <Legend />
-                            </PieChart>
-                        </ResponsiveContainer>
-                    </div>
+        {/* Bar chart */}
+        <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+            <div className="p-4 text-gray-900">
+                <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-semibold text-sm">
+                        Expenses by category ({selectedCurrency?.symbol ?? '€'})
+                    </h3>
+                    <select
+                        value={selectedCurrencyId ?? ''}
+                        onChange={(e) => setSelectedCurrencyId(parseInt(e.target.value))}
+                        className="border rounded px-2 py-1 text-xs"
+                    >
+                        {currencies.map(currency => (
+                            <option key={currency.id} value={currency.id}>
+                                {currency.symbol} — {currency.name}
+                            </option>
+                        ))}
+                    </select>
                 </div>
+                <ResponsiveContainer width="100%" height={200}>
+                    <BarChart data={barData}>
+                        <XAxis dataKey="category" tick={{ fontSize: 10 }} />
+                        <YAxis tick={{ fontSize: 10 }} />
+                        <Tooltip content={<CustomTooltip />} />
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <Bar dataKey="amount" fill="#6366f1" />
+                    </BarChart>
+                </ResponsiveContainer>
+            </div>
+        </div>
+
+        {/* Pie chart */}
+        <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+            <div className="p-4 text-gray-900">
+                <h3 className="font-semibold text-sm mb-4">Expenses by currency</h3>
+                <ResponsiveContainer width="100%" height={200}>
+                    <PieChart>
+                        <Pie
+                            data={pieData}
+                            dataKey="value"
+                            nameKey="name"
+                            cx="50%"
+                            cy="50%"
+                            outerRadius={70}
+                            label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                        >
+                            {pieData.map((entry, index) => (
+                                <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                            ))}
+                        </Pie>
+                        <Tooltip formatter={(value) => value.toFixed(2)} />
+                        <Legend />
+                    </PieChart>
+                </ResponsiveContainer>
+            </div>
+        </div>
+
+        {/* Area chart */}
+        <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+            <div className="p-4 text-gray-900">
+                <h3 className="font-semibold text-sm mb-4">
+                    Spending over time ({selectedCurrency?.symbol ?? '€'})
+                </h3>
+                <ResponsiveContainer width="100%" height={200}>
+                    <AreaChart data={lineData}>
+                        <XAxis dataKey="date" tick={{ fontSize: 10 }} />
+                        <YAxis tick={{ fontSize: 10 }} />
+                        <Tooltip formatter={(value) => value.toFixed(2)} />
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <Area type="monotone" dataKey="amount" stroke="#6366f1" fill="#6366f1" dot={false} />
+                    </AreaChart>
+                </ResponsiveContainer>
+            </div>
+        </div>
+
+    </div>
+</div>
+                
+                
             </div>
 
         </AuthenticatedLayout>
